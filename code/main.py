@@ -72,7 +72,7 @@ if LOAD_TRIANED_MODEL==True:
     vis_dl = DataLoader(vis_ds, batch_size=len(vis_ds), shuffle=False)
 
     model = support_functions.DogBreedPredictor(False)
-    model.load_state_dict(torch.load("../output/model3.pt", map_location = torch.device('cpu')))
+    model.load_state_dict(torch.load("../input/saved-models/model1.pt", map_location = torch.device('cpu')))
     model.eval()
 
 
