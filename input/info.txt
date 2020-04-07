@@ -1,0 +1,2 @@
+The train and test image sets can be downloaded from kaggle using the link:
+https://www.kaggle.com/c/dog-breed-identification/data
