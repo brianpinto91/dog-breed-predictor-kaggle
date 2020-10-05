@@ -1,7 +1,8 @@
 '''******************************************************************************
 *Programming language: Python
 *Filename: trainer.py
-*Description: This module is used to train a dog classifier deep learning model using Pytorch
+*Description: This module is used to train a dog classifier deep learning model using Pytorch.
+              The dataset was provided in a Kaggle competition
 *Author: Brian Pinto
 *Version: 1.0
 *Date: 07.11.2020
@@ -16,7 +17,7 @@ from PIL import Image
 import torch
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import StepLR
-import support_functions
+import utils
 
 Train = False
 Submit = False
@@ -43,24 +44,24 @@ if Train == True:
 
     #Pytorch dataset and dataloader
 
-    train_ds = support_functions.DogDataset(train_fol, train_labels)
-    val_ds = support_functions.DogDataset(train_fol, val_labels)
+    train_ds = utils.DogDataset(train_fol, train_labels)
+    val_ds = utils.DogDataset(train_fol, val_labels)
 
     train_loader = DataLoader(train_ds, batch_size=30, shuffle=True)
     val_loader = DataLoader(val_ds, batch_size=30, shuffle=False)
 
     dataloaders = {'train':train_loader,'val':val_loader}
 
-    model = support_functions.DogBreedPredictor(pretrained = True)
+    model = utils.DogBreedPredictor(pretrained = True)
     optimizer = torch.optim.Adam(model.fc.parameters(), lr=0.001) #initialize the optimizer
     loss_criteria = torch.nn.CrossEntropyLoss()
     scheduler = StepLR(optimizer, step_size=7, gamma=0.1, last_epoch=-1)
 
 if Submit == True:
-    model, traing_curve, val_curve = support_functions.train_model(model, dataloaders, optimizer, loss_criteria, scheduler, 25, True)
-    sub_ds = support_functions.DogDataset(test_fol, sample_sub, training=False)
+    model, traing_curve, val_curve = utils.train_model(model, dataloaders, optimizer, loss_criteria, scheduler, 25, True)
+    sub_ds = utils.DogDataset(test_fol, sample_sub, training=False)
     sub_dl = DataLoader(sub_ds, batch_size=30, shuffle=False)
-    sub_df = support_functions.submit_model(model, sub_dl)
+    sub_df = utils.submit_model(model, sub_dl)
     sub_df_names = sub_df.idxmax(axis=1)
     sub_df_names = pd.DataFrame({'id': sub_df_names.index, 'breed': sub_df_names.values})
     sub_df.to_csv("../output/submission.csv", index=True)
@@ -68,10 +69,10 @@ if Submit == True:
 
 if LOAD_TRIANED_MODEL==True:
     vis_df = labels_matrix.sample(4)
-    vis_ds = support_functions.DogDataset(train_fol, vis_df)
+    vis_ds = utils.DogDataset(train_fol, vis_df)
     vis_dl = DataLoader(vis_ds, batch_size=len(vis_ds), shuffle=False)
 
-    model = support_functions.DogBreedPredictor(False)
+    model = utils.DogBreedPredictor(False)
     model.load_state_dict(torch.load("../input/saved-models/model1.pt", map_location = torch.device('cpu')))
     model.eval()
 
