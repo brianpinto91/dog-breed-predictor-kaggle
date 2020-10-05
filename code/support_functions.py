@@ -1,10 +1,10 @@
 '''******************************************************************************
 *Programming language: Python
 *Filename: trainer.py
-*Description: This module is used to train a dog classifier deep learning model using Pytorch
+*Description: This module has the data preprocessing and training utilities
 *Author: Brian Pinto
 *Version: 1.0
-*Date: 07.11.2020
+*Date: 07.05.2020
 ##############################################################################'''
 import os
 import pandas as pd
